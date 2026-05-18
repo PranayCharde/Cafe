@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=DM+Sans:ital,opsz,wght@0,400;0,500;0,700;1,400&family=Fira+Code:wght@400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Warm, earthy cafe palette */
+  --background: 35 30% 96%;     /* Creamy off-white */
+  --foreground: 25 20% 15%;     /* Dark Coffee Bean */
+  
+  --primary: 28 60% 45%;        /* Rich Roasted Coffee Brown */
+  --primary-foreground: 35 30% 96%;
+  
+  --secondary: 150 25% 35%;     /* Sage/Matcha Green */
+  --secondary-foreground: 35 30% 98%;
+  
+  --accent: 32 80% 60%;         /* Warm Caramel/Latte Art */
+  --accent-foreground: 25 20% 15%;
+  
+  --muted: 35 20% 88%;
+  --muted-foreground: 25 10% 45%;
+  
+  --destructive: 0 70% 50%;
+  --destructive-foreground: 35 30% 98%;
+
+  --border: 30 15% 85%;
+  --input: 30 15% 85%;
+  --ring: 28 60% 45%;
+  
+  --card: 0 0% 100%;
+  --card-foreground: 25 20% 15%;
+
+  --radius: 0.75rem;
+  
+  --font-display: 'Architects Daughter', cursive;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+.dark {
+  --background: 25 20% 10%;
+  --foreground: 35 30% 90%;
+  
+  --primary: 28 50% 50%;
+  --primary-foreground: 35 30% 96%;
+  
+  --secondary: 150 20% 25%;
+  --secondary-foreground: 150 20% 90%;
+  
+  --accent: 32 70% 50%;
+  --accent-foreground: 25 20% 10%;
+  
+  --muted: 25 15% 20%;
+  --muted-foreground: 25 10% 60%;
+  
+  --destructive: 0 60% 40%;
+  --destructive-foreground: 35 30% 90%;
+  
+  --border: 25 15% 20%;
+  --input: 25 15% 20%;
+  --ring: 28 50% 50%;
+  
+  --card: 25 18% 13%;
+  --card-foreground: 35 30% 90%;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    @apply font-bold tracking-tight text-primary;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.5);
+}
+
+/* Page Transitions */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Utility for text gradients */
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+}

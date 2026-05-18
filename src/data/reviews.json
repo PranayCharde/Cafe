@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "name": "Sarah Johnson",
+    "rating": 5,
+    "message": "The best coffee in town! Their cappuccino is absolutely perfect every time. The atmosphere is cozy and the staff is incredibly friendly.",
+    "city": "New York",
+    "approved": true,
+    "createdAt": "2024-01-15T10:30:00Z"
+  },
+  {
+    "id": 2,
+    "name": "Michael Chen",
+    "rating": 4,
+    "message": "Great selection of pastries and sandwiches. The turkey club is my go-to lunch item. Only reason for 4 stars is they get quite busy during peak hours.",
+    "city": "Boston",
+    "approved": true,
+    "createdAt": "2024-01-12T14:15:00Z"
+  },
+  {
+    "id": 3,
+    "name": "Emma Rodriguez",
+    "rating": 5,
+    "message": "I'm obsessed with their chai latte! Perfect balance of spices and milk. The croissants are always fresh and buttery. Will definitely be coming back!",
+    "city": "Chicago",
+    "approved": true,
+    "createdAt": "2024-01-10T09:45:00Z"
+  },
+  {
+    "id": 4,
+    "name": "David Kim",
+    "rating": 4,
+    "message": "Excellent coffee shop with a great vibe. The Greek salad is surprisingly good for a cafe. Good wifi and plenty of seating for working.",
+    "city": "San Francisco",
+    "approved": true,
+    "createdAt": "2024-01-08T16:20:00Z"
+  },
+  {
+    "id": 5,
+    "name": "Lisa Thompson",
+    "rating": 5,
+    "message": "This place has become my second home! The baristas know my usual order and the quality is consistently amazing. Highly recommend the chocolate muffin!",
+    "city": "Seattle",
+    "approved": true,
+    "createdAt": "2024-01-05T11:30:00Z"
+  },
+  {
+    "id": 6,
+    "name": "James Wilson",
+    "rating": 4,
+    "message": "Solid coffee shop with good prices. The chicken panini is excellent and the coffee is always fresh. Could use a few more vegan options though.",
+    "city": "Denver",
+    "approved": true,
+    "createdAt": "2024-01-03T13:45:00Z"
+  }
+]

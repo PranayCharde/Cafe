@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "Coffee",
+    "slug": "coffee",
+    "description": "Freshly brewed coffee varieties",
+    "imageUrl": "/placeholder-coffee.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Tea",
+    "slug": "tea",
+    "description": "Premium tea selection",
+    "imageUrl": "/placeholder-tea.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Pastries",
+    "slug": "pastries",
+    "description": "Freshly baked pastries and desserts",
+    "imageUrl": "/placeholder-pastries.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Sandwiches",
+    "slug": "sandwiches",
+    "description": "Gourmet sandwiches and wraps",
+    "imageUrl": "/placeholder-sandwiches.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Salads",
+    "slug": "salads",
+    "description": "Fresh and healthy salads",
+    "imageUrl": "/placeholder-salads.jpg"
+  }
+]
