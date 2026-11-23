@@ -3,7 +3,9 @@ import { useContact } from "@/hooks/use-cafe";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, MessageSquare } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
+import { createWhatsAppLink, CAFE_WHATSAPP_NUMBER } from "@/lib/whatsapp";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Contact() {
@@ -103,6 +105,19 @@ export default function Contact() {
                   <p className="opacity-80">Mon-Fri: 8am - 10pm<br/>Sat-Sun: 9am - 11pm</p>
                 </div>
               </div>
+            </div>
+
+            {/* Direct WhatsApp Chat Action */}
+            <div className="mt-8 pt-8 border-t border-white/20">
+              <a
+                href={createWhatsAppLink(CAFE_WHATSAPP_NUMBER, "Hi Bean & Brew, I'd like to get in touch!")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg transition-all"
+              >
+                <FaWhatsapp className="w-5 h-5" />
+                <span>Instant WhatsApp Chat</span>
+              </a>
             </div>
           </div>
 

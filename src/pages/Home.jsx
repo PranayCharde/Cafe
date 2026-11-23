@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { useProducts, useReviews } from "@/hooks/use-cafe";
 import { ProductCard } from "@/components/ProductCard";
-import { ArrowRight, Clock, MapPin, Star, Wifi, ShieldCheck, DollarSign } from "lucide-react";
+import { ArrowRight, Clock, MapPin, Star, Wifi, ShieldCheck, DollarSign, QrCode } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 export default function Home() {
@@ -39,7 +40,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/menu">
                 <Button size="lg" className="text-lg px-8 py-6 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl hover:translate-y-[-2px] transition-all">
-                  Order Now
+                  Order Online
                 </Button>
               </Link>
               <Link href="/reservation">
@@ -57,10 +58,10 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: ShieldCheck, title: "Fresh Ingredients", desc: "Locally sourced, organic produce." },
-              { icon: Clock, title: "Fast Service", desc: "Served hot and fresh in minutes." },
-              { icon: Wifi, title: "Free WiFi", desc: "Stay connected while you sip." },
-              { icon: DollarSign, title: "Pocket Friendly", desc: "Premium taste, honest prices." },
+              { icon: QrCode, title: "QR Table Ordering", desc: "Scan your table QR code, log in, and get served." },
+              { icon: FaWhatsapp, title: "WhatsApp Updates", desc: "Order confirmation and instant waiter support." },
+              { icon: ShieldCheck, title: "Fresh Ingredients", desc: "Locally sourced, organic and artisan produce." },
+              { icon: Clock, title: "Fast Table Service", desc: "Served hot and fresh to your seat in minutes." },
             ].map((item, idx) => (
               <motion.div 
                 key={idx}
