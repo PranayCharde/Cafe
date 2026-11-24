@@ -124,9 +124,13 @@ export default function Cart() {
       })),
     };
 
-    // Try posting to real-time Backend API first
+    // Post to real-time Backend API (Railway Live backend or env override)
+    const API_ENDPOINT = import.meta.env.VITE_API_URL
+      ? `${import.meta.env.VITE_API_URL.replace(/\/+$/, "")}/orders`
+      : "https://cafe-backend-production-e4bb93a5.up.railway.app/api/orders";
+
     try {
-      const res = await fetch("http://localhost:5001/api/orders", {
+      const res = await fetch(API_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderPayload),
@@ -134,7 +138,7 @@ export default function Cart() {
 
       if (res.ok) {
         const data = await res.json();
-        const placed = data.order || {
+        const placed = data.data || data.order || {
           id: Math.floor(1000 + Math.random() * 9000),
           ...orderPayload,
           createdAt: new Date().toISOString(),
@@ -153,7 +157,7 @@ export default function Cart() {
         clearCart();
         toast({
           title: "Order Placed Successfully!",
-          description: `Order #${placed.id} sent directly to the kitchen.`,
+          description: `Order #${placed.orderId || placed.id} sent directly to the kitchen.`,
         });
         return;
       }
