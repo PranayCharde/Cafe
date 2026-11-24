@@ -31,7 +31,7 @@ export default function Menu() {
   const categoryIdParam = selectedCategory === "all" ? undefined : selectedCategory;
   const { data: products, isLoading: productsLoading } = useProducts(categoryIdParam);
 
-  const filteredProducts = products?.filter(p => 
+  const filteredProducts = (Array.isArray(products) ? products : []).filter(p => 
     p.name.toLowerCase().includes(search.toLowerCase()) || 
     p.description?.toLowerCase().includes(search.toLowerCase())
   );

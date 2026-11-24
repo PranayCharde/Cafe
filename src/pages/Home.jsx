@@ -105,8 +105,8 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {popularProducts?.slice(0, 4).map((product) => (
-                <ProductCard key={product.id} product={product} />
+              {(Array.isArray(popularProducts) ? popularProducts : []).slice(0, 4).map((product) => (
+                <ProductCard key={product.id || product._id} product={product} />
               ))}
             </div>
           )}
@@ -128,7 +128,7 @@ export default function Home() {
               {reviewsLoading ? (
                 <div className="w-full text-center py-10">Loading reviews...</div>
               ) : (
-                reviews?.slice(0, 5).map((review) => (
+                (Array.isArray(reviews) ? reviews : []).slice(0, 5).map((review) => (
                   <div 
                     key={review.id} 
                     className="min-w-[300px] md:min-w-[400px] bg-card p-8 rounded-3xl border border-border shadow-sm snap-center"

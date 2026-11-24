@@ -95,6 +95,17 @@ export default function Cart() {
     if (!validateForm()) return;
     if (items.length === 0) return;
 
+    // Guard: Check if any item in cart is unavailable
+    const unavailableItem = items.find((it) => it.available === false);
+    if (unavailableItem) {
+      toast({
+        title: "Item Unavailable",
+        description: `"${unavailableItem.name}" is currently sold out and cannot be ordered. Please remove it from your cart.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     const orderPayload = {
       customerName: formData.customerName,
       mobileNumber: formData.mobileNumber,

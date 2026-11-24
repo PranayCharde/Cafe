@@ -53,7 +53,6 @@ export function Footer() {
               <li><Link href="/reservation" className="text-sm text-gray-400 hover:text-primary transition-colors">Book a Table</Link></li>
               <li><Link href="/gallery" className="text-sm text-gray-400 hover:text-primary transition-colors">Gallery</Link></li>
               <li><Link href="/reviews" className="text-sm text-gray-400 hover:text-primary transition-colors">Customer Reviews</Link></li>
-              <li><Link href="/admin" className="text-xs text-gray-500 hover:text-primary transition-colors">Staff / Kitchen Portal</Link></li>
             </ul>
           </div>
 

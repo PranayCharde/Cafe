@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { useCart } from "@/hooks/use-cart";
 import { useAuth } from "@/hooks/use-auth";
-import { Coffee, Menu, ShoppingBag, X, QrCode, User, LogOut, Utensils, ShieldCheck } from "lucide-react";
+import { Coffee, Menu, ShoppingBag, X, User, LogOut, Utensils } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,7 +11,7 @@ export function Navbar() {
   const [location] = useLocation();
   const cartItems = useCart((state) => state.items);
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-  const { isAuthenticated, user, logout, tableNumber } = useAuth();
+  const { isAuthenticated, user, logout, tableNumber, clearTable } = useAuth();
 
   const [isOpen, setIsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -42,12 +42,22 @@ export function Navbar() {
 
             {/* Active Table Pill */}
             {tableNumber && (
-              <Link href={`/table/${tableNumber}`}>
-                <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/15 border border-primary/30 text-primary text-xs font-bold hover:bg-primary/25 transition-all cursor-pointer">
+              <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/15 border border-primary/30 text-primary text-xs font-bold transition-all">
+                <Link href={`/table/${tableNumber}`} className="flex items-center gap-1.5 hover:underline cursor-pointer">
                   <Utensils className="w-3.5 h-3.5" />
                   <span>Table #{tableNumber}</span>
-                </div>
-              </Link>
+                </Link>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    clearTable();
+                  }}
+                  title="Leave Table (Switch to Takeaway/General mode)"
+                  className="ml-1 p-0.5 rounded-full hover:bg-primary/20 text-primary/70 hover:text-destructive cursor-pointer transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
             )}
           </div>
 
@@ -70,18 +80,6 @@ export function Navbar() {
 
           {/* Actions */}
           <div className="flex items-center gap-3 sm:gap-4">
-            {/* Admin Portal Shortcut */}
-            <Link href="/admin">
-              <Button
-                variant="ghost"
-                size="icon"
-                title="Kitchen & Admin Panel"
-                className="rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 h-10 w-10"
-              >
-                <ShieldCheck className="w-5 h-5 text-primary" />
-              </Button>
-            </Link>
-
             {/* Cart Button */}
             <Link href="/cart">
               <Button
@@ -180,12 +178,6 @@ export function Navbar() {
                     </span>
                   </Link>
                 ))}
-
-                <Link href="/admin" onClick={() => setIsOpen(false)}>
-                  <span className="text-base font-bold text-primary flex items-center gap-2 py-2">
-                    <ShieldCheck className="w-4 h-4" /> Kitchen & Admin Panel
-                  </span>
-                </Link>
 
                 {/* Mobile Auth Status */}
                 <div className="pt-3 border-t border-border/60">

@@ -168,7 +168,7 @@ export default function Reviews() {
           {isLoading ? (
             <div className="col-span-full text-center py-10">Loading reviews...</div>
           ) : (
-            reviews?.map((review) => (
+            (Array.isArray(reviews) ? reviews : []).map((review) => (
               <div key={review.id} className="bg-card p-6 rounded-2xl border border-border shadow-sm hover:shadow-md transition-all">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center gap-3">

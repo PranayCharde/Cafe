@@ -4,7 +4,12 @@ import categoriesData from "@/data/categories.json";
 import productsData from "@/data/products.json";
 import reviewsData from "@/data/reviews.json";
 
-const API_BASE = "http://localhost:5001/api";
+export const LIVE_BACKEND_URL = "https://cafe-backend-production-e4bb93a5.up.railway.app";
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+    ? "http://localhost:5001/api"
+    : `${LIVE_BACKEND_URL}/api`);
 
 // === PRODUCTS & CATEGORIES ===
 
@@ -15,7 +20,9 @@ export function useCategories() {
       try {
         const res = await fetch(`${API_BASE}/menu/categories`);
         if (res.ok) {
-          return await res.json();
+          const json = await res.json();
+          if (Array.isArray(json)) return json;
+          if (json && Array.isArray(json.data)) return json.data;
         }
       } catch (e) {
         // Fallback to local data
@@ -36,7 +43,16 @@ export function useProducts(categoryId, isPopular) {
 
         const res = await fetch(`${API_BASE}/menu/products?${params.toString()}`);
         if (res.ok) {
-          return await res.json();
+          const json = await res.json();
+          const items = Array.isArray(json) ? json : json?.data;
+          if (Array.isArray(items)) {
+            // Also normalize price and id
+            return items.map((p) => ({
+              ...p,
+              id: p.id || p._id,
+              price: String(p.price),
+            }));
+          }
         }
       } catch (e) {
         // Fallback to local data
@@ -70,7 +86,7 @@ export function useCreateOrder() {
 
         if (res.ok) {
           const data = await res.json();
-          return data.order;
+          return data.data || data.order || data;
         }
       } catch (e) {
         // Fallback simulation
@@ -85,7 +101,7 @@ export function useCreateOrder() {
     onSuccess: (order) => {
       toast({
         title: "Order Placed!",
-        description: `Order #${order.id} sent to the kitchen.`,
+        description: `Order #${order.orderId || order.id || "101"} sent to the kitchen.`,
       });
     },
     onError: (error) => {
@@ -114,7 +130,7 @@ export function useCreateReservation() {
 
         if (res.ok) {
           const data = await res.json();
-          return data.reservation;
+          return data.data || data.reservation || data;
         }
       } catch (e) {
         // Fallback simulation
@@ -153,7 +169,9 @@ export function useReviews() {
       try {
         const res = await fetch(`${API_BASE}/reviews`);
         if (res.ok) {
-          return await res.json();
+          const json = await res.json();
+          if (Array.isArray(json)) return json;
+          if (json && Array.isArray(json.data)) return json.data;
         }
       } catch (e) {
         // Fallback
@@ -178,7 +196,7 @@ export function useCreateReview() {
 
         if (res.ok) {
           const data = await res.json();
-          return data.review;
+          return data.data || data.review || data;
         }
       } catch (e) {
         // Fallback
@@ -201,7 +219,7 @@ export function useCreateReview() {
     },
     onError: (error) => {
       toast({
-        title: "Submission Failed",
+        title: "Review Failed",
         description: error.message,
         variant: "destructive",
       });
@@ -225,7 +243,7 @@ export function useContact() {
 
         if (res.ok) {
           const data = await res.json();
-          return data.contact;
+          return data.data || data.contact || data;
         }
       } catch (e) {
         // Fallback

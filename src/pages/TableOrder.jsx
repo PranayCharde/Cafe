@@ -15,7 +15,7 @@ export default function TableOrder() {
   const [, setLocation] = useLocation();
   const tableId = params?.tableId || "1";
 
-  const { isAuthenticated, user, setTable, tableNumber } = useAuth();
+  const { isAuthenticated, user, setTable, clearTable, tableNumber } = useAuth();
   const cartItems = useCart((state) => state.items);
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const { toast } = useToast();
@@ -143,6 +143,40 @@ export default function TableOrder() {
             <FaWhatsapp className="w-5 h-5 text-[#25D366]" />
             <span>Call Waiter via WhatsApp</span>
           </Button>
+        </div>
+
+        {/* Switch Table or Takeaway Link */}
+        <div className="mt-6 pt-4 border-t border-border/40 text-center">
+          <p className="text-xs text-muted-foreground mb-2">
+            Seated at a different table? Select your table number:
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-1.5 max-w-xs mx-auto">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num) => (
+              <button
+                key={num}
+                type="button"
+                onClick={() => setLocation(`/table/${num}`)}
+                className={`w-7 h-7 rounded-lg text-xs font-bold transition cursor-pointer ${
+                  String(num) === String(tableId)
+                    ? 'bg-primary text-primary-foreground shadow'
+                    : 'bg-muted/80 text-muted-foreground hover:bg-primary/20 hover:text-primary'
+                }`}
+                title={`Switch to Table #${num}`}
+              >
+                {num}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              clearTable();
+              setLocation('/menu');
+            }}
+            className="mt-3 text-xs text-primary hover:underline font-medium inline-block cursor-pointer"
+          >
+            Switch to Regular Takeaway / Delivery Mode &rarr;
+          </button>
         </div>
 
         {/* Footer info */}
