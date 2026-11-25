@@ -27,7 +27,7 @@ export function formatOrderReceiptWhatsApp({
   mobileNumber,
   paymentMode,
   notes,
-  orderType = "Dine-in"
+  orderType = "Takeaway"
 }) {
   const itemListText = items
     .map(
@@ -43,7 +43,7 @@ export function formatOrderReceiptWhatsApp({
     `☕ *${CAFE_NAME} - Order Confirmation*\n` +
     `━━━━━━━━━━━━━━━━━━━━━━\n` +
     `🧾 *Order ID:* #${orderId}\n` +
-    `🛎️ *Order Type:* ${tableNumber ? "Dine-in (Table Service)" : orderType}\n` +
+    `🛎️ *Order Type:* ${tableNumber ? `Dine-in (Table #${tableNumber})` : "Takeaway (Counter Pickup)"}\n` +
     tableInfo +
     `👤 *Customer:* ${customerName} (${mobileNumber})\n` +
     `💳 *Payment Mode:* ${paymentMode || "Pay at Counter"}\n` +

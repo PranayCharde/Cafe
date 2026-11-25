@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useCart } from "@/hooks/use-cart";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus, Trash2, ArrowRight, Utensils, CheckCircle2, ShieldCheck, MapPin } from "lucide-react";
+import { Minus, Plus, Trash2, ArrowRight, Utensils, CheckCircle2, ShieldCheck, MapPin, ShoppingBag } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { Link, useLocation } from "wouter";
 import { useCreateOrder } from "@/hooks/use-cafe";
@@ -36,10 +36,10 @@ export default function Cart() {
   const [formData, setFormData] = useState({
     customerName: "",
     mobileNumber: "",
-    address: "",
+    selectedTable: tableNumber ? String(tableNumber) : "",
     notes: "",
     paymentMode: "UPI",
-    orderType: tableNumber ? "dine-in" : "delivery",
+    orderType: tableNumber ? "dine-in" : "takeaway",
   });
 
   const [errors, setErrors] = useState({});
@@ -60,13 +60,7 @@ export default function Cart() {
       setFormData((prev) => ({
         ...prev,
         orderType: "dine-in",
-        address: `Dine-in at Table #${tableNumber}`,
-      }));
-    } else if (!formData.address || formData.address.startsWith("Dine-in")) {
-      setFormData((prev) => ({
-        ...prev,
-        orderType: "delivery",
-        address: "",
+        selectedTable: String(tableNumber),
       }));
     }
   }, [tableNumber]);
@@ -79,8 +73,9 @@ export default function Cart() {
     if (!formData.mobileNumber || formData.mobileNumber.trim().length < 10) {
       newErrors.mobileNumber = "Valid 10-digit mobile number required";
     }
-    if (formData.orderType === "delivery" && (!formData.address || formData.address.trim().length < 5)) {
-      newErrors.address = "Delivery address is required";
+    const activeTable = tableNumber || formData.selectedTable;
+    if (formData.orderType === "dine-in" && !activeTable) {
+      newErrors.table = "Table number is required for Dine-in";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -106,12 +101,16 @@ export default function Cart() {
       return;
     }
 
+    const activeTable = formData.orderType === "dine-in"
+      ? (tableNumber ? parseInt(tableNumber, 10) : (parseInt(formData.selectedTable, 10) || null))
+      : null;
+
     const orderPayload = {
       customerName: formData.customerName,
       mobileNumber: formData.mobileNumber,
       email: user?.email || "",
-      tableNumber: formData.orderType === "dine-in" ? tableNumber : null,
-      orderType: formData.orderType === "dine-in" ? "dine-in" : "delivery",
+      tableNumber: activeTable,
+      orderType: formData.orderType === "dine-in" ? "dine-in" : "takeaway",
       paymentMode: formData.paymentMode,
       totalAmount: total,
       notes: formData.notes,
@@ -170,7 +169,7 @@ export default function Cart() {
       {
         customerName: formData.customerName,
         mobileNumber: formData.mobileNumber,
-        address: formData.orderType === "dine-in" ? `Table #${tableNumber}` : formData.address,
+        address: formData.orderType === "dine-in" ? `Table #${activeTable}` : "Takeaway (Counter Pickup)",
         notes: formData.notes,
         paymentMode: formData.paymentMode,
         totalAmount: String(total),
@@ -180,8 +179,8 @@ export default function Cart() {
         onSuccess: (order) => {
           const placedOrder = {
             id: order.id,
-            tableNumber: formData.orderType === "dine-in" ? tableNumber : null,
-            orderType: formData.orderType === "dine-in" ? "Dine-in" : "Delivery",
+            tableNumber: activeTable,
+            orderType: formData.orderType === "dine-in" ? "Dine-in" : "Takeaway",
             items: [...items],
             total,
             customerName: formData.customerName,
@@ -452,30 +451,92 @@ export default function Cart() {
                   )}
                 </div>
 
-                {tableNumber ? (
-                  <div className="p-3.5 rounded-xl bg-primary/5 border border-primary/20">
-                    <span className="text-xs text-muted-foreground font-medium block">
-                      Serving Location
-                    </span>
-                    <span className="text-sm font-bold text-primary flex items-center gap-1.5 mt-0.5">
-                      <Utensils className="w-4 h-4" /> Dine-in: Table #{tableNumber}
-                    </span>
+                {/* Cafe Order Type Selector */}
+                <div className="pt-1">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                    Order Type
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => handleInputChange("orderType", "dine-in")}
+                      className={`p-3 rounded-2xl border text-left flex items-center gap-2.5 transition-all cursor-pointer ${
+                        formData.orderType === "dine-in"
+                          ? "border-primary bg-primary/10 text-primary shadow-xs font-semibold"
+                          : "border-border bg-card text-muted-foreground hover:bg-secondary/10"
+                      }`}
+                    >
+                      <div className={`p-2 rounded-xl shrink-0 ${formData.orderType === "dine-in" ? "bg-primary text-white" : "bg-secondary text-muted-foreground"}`}>
+                        <Utensils className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold leading-tight">Dine-In</div>
+                        <div className="text-[11px] opacity-80 leading-tight">Table Service</div>
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleInputChange("orderType", "takeaway")}
+                      className={`p-3 rounded-2xl border text-left flex items-center gap-2.5 transition-all cursor-pointer ${
+                        formData.orderType === "takeaway"
+                          ? "border-primary bg-primary/10 text-primary shadow-xs font-semibold"
+                          : "border-border bg-card text-muted-foreground hover:bg-secondary/10"
+                      }`}
+                    >
+                      <div className={`p-2 rounded-xl shrink-0 ${formData.orderType === "takeaway" ? "bg-primary text-white" : "bg-secondary text-muted-foreground"}`}>
+                        <ShoppingBag className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold leading-tight">Takeaway</div>
+                        <div className="text-[11px] opacity-80 leading-tight">Counter Pickup</div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Serving Location / Pickup Details */}
+                {formData.orderType === "dine-in" ? (
+                  <div className="p-3.5 rounded-2xl bg-primary/5 border border-primary/20 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">
+                        Table Information
+                      </span>
+                      {tableNumber && (
+                        <span className="text-[11px] px-2 py-0.5 rounded-full bg-primary/15 text-primary font-bold">
+                          QR Scanned
+                        </span>
+                      )}
+                    </div>
+                    {tableNumber ? (
+                      <div className="text-sm font-bold text-primary flex items-center gap-2">
+                        <Utensils className="w-4 h-4" /> Seated at Table #{tableNumber}
+                      </div>
+                    ) : (
+                      <div>
+                        <input
+                          type="number"
+                          min="1"
+                          max="50"
+                          placeholder="Enter your Table Number (e.g. 4)"
+                          className={`w-full p-2.5 text-sm rounded-xl border ${
+                            errors.table ? "border-red-500" : "border-border"
+                          } bg-background`}
+                          value={formData.selectedTable}
+                          onChange={(e) => handleInputChange("selectedTable", e.target.value)}
+                        />
+                        {errors.table && <p className="text-red-500 text-xs mt-1">{errors.table}</p>}
+                      </div>
+                    )}
                   </div>
                 ) : (
-                  <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
-                      Delivery Address
-                    </label>
-                    <textarea
-                      placeholder="Apartment, Street, Landmark..."
-                      rows="2"
-                      className={`w-full p-3 text-sm rounded-xl border ${
-                        errors.address ? "border-red-500" : "border-border"
-                      } bg-background resize-none`}
-                      value={formData.address}
-                      onChange={(e) => handleInputChange("address", e.target.value)}
-                    />
-                    {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
+                  <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs space-y-1">
+                    <div className="font-bold text-amber-800 dark:text-amber-400 flex items-center gap-1.5">
+                      <ShoppingBag className="w-4 h-4" /> Cafe Counter Pickup
+                    </div>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Your order will be prepared fresh and ready for pickup at our barista counter.
+                    </p>
                   </div>
                 )}
 
@@ -500,7 +561,7 @@ export default function Cart() {
                     {[
                       { id: "UPI", label: "UPI" },
                       { id: "Card", label: "Card" },
-                      { id: "COD", label: tableNumber ? "Counter" : "Cash" },
+                      { id: "COD", label: "Pay at Counter" },
                     ].map((mode) => (
                       <label
                         key={mode.id}
@@ -532,9 +593,9 @@ export default function Cart() {
                     ? "Placing Order..."
                     : !isAuthenticated
                     ? "Login & Place Order"
-                    : tableNumber
-                    ? `Confirm Order for Table #${tableNumber} (₹${total.toFixed(2)})`
-                    : `Place Order (₹${total.toFixed(2)})`}
+                    : formData.orderType === "dine-in"
+                    ? `Confirm Dine-In Order ${tableNumber || formData.selectedTable ? `(Table #${tableNumber || formData.selectedTable}) ` : ""}(₹${total.toFixed(2)})`
+                    : `Confirm Takeaway Order (₹${total.toFixed(2)})`}
                 </Button>
               </form>
             </div>
@@ -569,10 +630,14 @@ export default function Cart() {
           </DialogTitle>
 
           <DialogDescription className="text-sm text-muted-foreground mt-1 mb-6">
-            Order ID <span className="font-bold text-foreground">#{successOrder?.id}</span> has been sent to our kitchen.
-            {successOrder?.tableNumber && (
+            Order ID <span className="font-bold text-foreground">#{successOrder?.orderId || successOrder?.id}</span> has been sent to our kitchen.
+            {successOrder?.tableNumber ? (
               <span className="block mt-1 text-primary font-bold">
                 Serving directly to Table #{successOrder.tableNumber}
+              </span>
+            ) : (
+              <span className="block mt-1 text-primary font-bold">
+                Ready for Counter Pickup at the cafe
               </span>
             )}
           </DialogDescription>

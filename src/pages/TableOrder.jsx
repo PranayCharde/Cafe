@@ -175,7 +175,7 @@ export default function TableOrder() {
             }}
             className="mt-3 text-xs text-primary hover:underline font-medium inline-block cursor-pointer"
           >
-            Switch to Regular Takeaway / Delivery Mode &rarr;
+            Switch to Regular Takeaway (Counter Pickup) Mode &rarr;
           </button>
         </div>
 
